@@ -1,9 +1,10 @@
-import { Body, Delete, Get, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { CreateUserDto } from "src/dataAccess/dtos/createUserDto";
 import { UpdateUserDto } from "src/dataAccess/dtos/updateUserDto";
 import { UserEntity } from "src/dataAccess/entities/user.entity";
 import { UserService } from "src/dataAccess/services/userService";
 
+@Controller('user')
 export class UserController{
     constructor( private readonly userService: UserService){}
 
@@ -12,10 +13,10 @@ export class UserController{
         return await this.userService.findAll();
     }
 
-    @Get()
+    /* @Get()
     async getOne(): Promise<UserEntity>{
         return await this.userService.findOne();
-    }
+    } */
 
     @Post()
     async create(@Body("user") userData: CreateUserDto): Promise<UserEntity>{
@@ -27,8 +28,8 @@ export class UserController{
         return await this.userService.update(userData);
     }
 
-    @Delete()
-    async delete(): Promise<any>{
-        return await this.userService.delete();
+    @Delete(':id')
+    async delete(@Param('id') userId: number): Promise<any>{
+        return await this.userService.remove(userId);
     }
 }

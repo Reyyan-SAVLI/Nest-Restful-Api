@@ -22,17 +22,22 @@ export class UserService {
       return this.userRepository.findOneBy({id});
     }
 
-    async remove(id: number): Promise<void>{
-      await this.userRepository.delete({id});  
+    findEmail(email: string): Promise<UserEntity>{
+      return this.userRepository.findOneBy({email});
     }
 
-    async create(dto: CreateUserDto): Promise<UserEntity>{
-        const {email} = dto;
-        const qb = this.userRepository
-        .createQueryBuilder("users")
-        .where("users.email = :email", {email});
-        const existUser = qb.getOne();
+    async remove(id: number): Promise<void>{
+      await this.userRepository.delete(id);  
+    }
 
+    async create(dto: CreateUserDto){
+      
+        const {email} = dto;
+        const qb = await this.userRepository
+        .createQueryBuilder("user_entity")
+        .where("user_entity.email = :email", {email});
+        
+        const existUser = await qb.getOne();
         if(existUser){
             console.log('Kayıt var.');
             throw error;
@@ -43,7 +48,7 @@ export class UserService {
         newUser.lastName = dto.lastName;
         newUser.email = dto.email;
         newUser.password = dto.password;
-
+        
         return await this.userRepository.save(newUser);
 
     }

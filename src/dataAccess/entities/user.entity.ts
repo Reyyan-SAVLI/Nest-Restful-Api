@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import * as argon2 from 'argon2'; 
 
-@Entity("users")
+@Entity()
 export class UserEntity{
 
     @PrimaryGeneratedColumn()
@@ -17,4 +18,9 @@ export class UserEntity{
 
     @Column()
     password: string;
+
+    @BeforeInsert()
+    async hashPassword(){
+        this.password = await argon2.hash(this.password);
+    }
 }

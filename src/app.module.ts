@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DemoController } from './controllers/demoController';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserEntity } from './dataAccess/entities/user.entity';
+import { UserModule } from './dataAccess/modules/user.module';
+import { AuthModule } from './dataAccess/modules/auth.module';
 
 @Module({
   imports: [ TypeOrmModule.forRoot({
@@ -15,8 +16,11 @@ import { UserEntity } from './dataAccess/entities/user.entity';
     database: 'rest_trial',
     entities: [UserEntity],
     synchronize: true,
-  }),],
-  controllers: [AppController, DemoController],
+  }),
+  UserModule,
+  AuthModule
+],
+  controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
